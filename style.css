@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P|Teko:300,400');
+
+body{
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  /*font-family: "Press Start 2P";*/
+  color: black;
+}
+
+#note-tracker {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  font-weight: 300;
+  color: orange;
+  max-width: 50vw;
+  display: none;
+}
+
+#score-tracker{
+  font-size: 30px;
+  position: absolute;
+  top: 10px;
+  right: 1vw;
+  text-align: center;
+  min-width: 500px;
+  display: none;
+}
+
+#key-scores{
+  position: absolute;
+  bottom: 40vh;
+  color: lime;
+  font-family: "Press Start 2P"; 
+  display: none; /*flex;*/
+  white-space: nowrap;
+  width: 100vw;
+  transform: translateX(-20vw);
+}
+
+#piano-keys{
+  display: flex;
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+  margin: 0;
+}
+
+.piano-key {
+  box-sizing: border-box;
+  background-color: rgb(228, 216, 209);
+}
+
+.piano-key.white {
+  transition: background-color .15s ease;
+  height: 32vh;
+}
+
+.piano-key.white.eb{
+  border-right: 4px solid rgb(0,0,0);
+}
+
+.piano-key.black{
+  height: 22vh;
+  position: absolute;
+  margin-bottom: 10vh;
+  border: 4px solid black;
+  border-top: none;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  background-image: linear-gradient(to right, rgb(211, 0, 158),orange, yellow);
+  background-size: 100vw;
+  background: black;
+}
+
+.piano-key.black > div {
+  height: 10vh;
+  width: 4px;
+  background: black;
+  position: absolute;
+  bottom: calc(-10vh - 4px);
+}
+
+.piano-key.white:last-child{
+  border-right: 4px solid rgb(0,0,0);
+}
+
+@keyframes blinkNote {
+  from{
+    filter: brightness(3)
+  }
+  to {
+    filter: brightness(1)
+  }
+}
+
+@keyframes reverseBlinkNote {
+  from {
+    filter: brightness(0.33)
+  }
+  to {
+    filter: brightness(1)
+  }
+}
+
+@keyframes fadeIn {
+  from{
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
+}
+
+/*#tablature {
+  position: absolute;
+  bottom: 40vh;
+  color: white;
+}*/
+
+#tablature {
+  border: 1px solid #8f8f8f;
+  box-shadow: 10px 15px 25px #888888;
+  margin-top: 20px;
+  margin-left: 20px;
+  width: 1360px;
+}
+h1 {
+  margin-left: 20px;
+  font-family: Helvetica, Arial;
+  text-align: center;
+  margin-bottom: 0px;
+  font-style: italic;
+  font-weight: normal;
+}
+#tempo {
+  font-size: 16pt;
+  float: left;
+  margin-left: 30px;
+}
+#attribution {
+  font-size: 16pt;
+  float: right;
+  margin-right: 35px;
+}
+h2 {
+  margin-top: 50px;
+  margin-left: 40px;
+  color: #999999;
+}
