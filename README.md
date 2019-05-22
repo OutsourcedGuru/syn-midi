@@ -34,8 +34,6 @@ cchrome index.html
 
 ## Current limitations
 * At the moment, it will accept a single note at a time, rendering this as a quarter note
-* I haven't added any of the black notes for v1.1 (expected next version)
-* For practical reasons for this version, I'm limiting the upper range of notes
 
 ## vexflow-syn
 The underlying vexflow-syn code fully supports some great-looking tablature, as seen below.
@@ -46,7 +44,7 @@ The underlying vexflow-syn code fully supports some great-looking tablature, as 
 
 |Description|Version|Author|Last Update|
 |:---|:---|:---|:---|
-|syn-midi|v1.1|OutsourcedGuru|May 18, 2019|
+|syn-midi|v1.2|OutsourcedGuru|May 21, 2019|
 
 |Donate||Cryptocurrency|
 |:-----:|---|:--------:|
