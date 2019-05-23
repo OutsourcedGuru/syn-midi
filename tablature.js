@@ -46,6 +46,8 @@ function addNote(strNote) {
   if (noteLength(arrayNoteArrays, 0) % 4 == 0) {
     arrayNoteArrays[0].push(new Vex.Flow.BarNote());
     arrayNoteArrays[1].push(new Vex.Flow.BarNote());
+    arrayAccArrays[0].push(true);
+    arrayAccArrays[1].push(true);
   }
 }
 
@@ -140,6 +142,8 @@ function showNotes() {
     // stave's note array.
     // ----------------------------------------------------------------------------------------
     for (i=0; i < arrayNoteArrays[staveIterator].length; i++) {
+      if (staveIterator == 0 && arrayNoteArrays[staveIterator][i].keys)
+        console.log(arrayNoteArrays[staveIterator][i].keys[0]);
       if (arrayNoteArrays[staveIterator][i].keys) { // Returns false if this isn't a key/rest
         switch (arrayNoteArrays[staveIterator][i].duration) {
           case 'w':

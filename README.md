@@ -44,7 +44,7 @@ The underlying vexflow-syn code fully supports some great-looking tablature, as 
 
 |Description|Version|Author|Last Update|
 |:---|:---|:---|:---|
-|syn-midi|v1.2|OutsourcedGuru|May 21, 2019|
+|syn-midi|v1.3|OutsourcedGuru|May 22, 2019|
 
 |Donate||Cryptocurrency|
 |:-----:|---|:--------:|
