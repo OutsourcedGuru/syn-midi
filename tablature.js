@@ -12,15 +12,13 @@ var arrayVoices       = [numStaves / 2];
 var arrayBraces       = [numStaves / 2];
 var leftDecoration    = [numStaves / 2];
 var rightDecoration   = [numStaves / 2];
-var arrayNoteArrays   = [numStaves];
-var arrayAccArrays    = [numStaves];
+var arrayNoteArrays   = [numStaves];        arrayNoteArrays[0] =  [];     arrayNoteArrays[1] =  [];
+var arrayAccArrays    = [numStaves];        arrayAccArrays[0] =   [];     arrayAccArrays[1] =   [];
 var arrayBeats        = [numStaves];
 var arrayStaves       = [numStaves];
 var VFS               = Vex.Flow.StaveNote;
-arrayNoteArrays[0] =  [];
-arrayNoteArrays[1] =  [];
-arrayAccArrays[0] =   [];
-arrayAccArrays[1] =   [];
+var bNoteDown         = false;
+var arrayNotesPlayed  = [];
 
 showNotes();
 
@@ -28,27 +26,100 @@ showNotes();
 // Functions follow
 // --------------------------------------------------------------------------------------------
 function addNote(strNote) {
-  if (isUpper(strNote)) {
-    var vfsNote = new VFS({ keys: [convertNote(strNote, true)], duration: "q" });
-    var vfsRest = new VFS({ clef: "bass", keys: ["f/3"], duration: "qr" });
-    arrayNoteArrays[0].push(vfsNote);
-    arrayNoteArrays[1].push(vfsRest);
-    arrayAccArrays[0].push(true);
-    arrayAccArrays[1].push(true);
+  var chordNotes =                           [];
+  if (bNoteDown) {
+    // There's already a note being played, add this one to the array,
+    // delete the existing one and add it back as a chord instead
+    var convertedNote =                       convertNote(strNote, isUpper(strNote));
+    var objNote =                             {original: strNote, converted: convertedNote};
+    arrayNotesPlayed.push(objNote);
+    arrayNotesPlayed.sort(function(a, b) {
+      // The octave of the first is bigger than the second
+      if (parseInt(a.original.slice(-1)) > parseInt(b.original.slice(-1))) {
+        return 1;
+      }
+      // The octave of the second is bigger than the second
+      if (parseInt(a.original.slice(-1)) < parseInt(b.original.slice(-1))) {
+        return -1;
+      }
+      // The octave was the same, continue checking: work right-most, left-most
+      if (a.original.slice(0, -1) == 'B')   { return 1;  } // High
+      if (b.original.slice(0, -1) == 'B')   { return -1; }
+      if (a.original.slice(0, -1) == 'C')   { return -1; } // Low
+      if (b.original.slice(0, -1) == 'C')   { return 1;  }
+      if (a.original.slice(0, -1) == 'Bb')  { return 1;  } // High
+      if (b.original.slice(0, -1) == 'Bb')  { return -1; }
+      if (a.original.slice(0, -1) == 'Db')  { return -1; } // Low
+      if (b.original.slice(0, -1) == 'Db')  { return 1;  }
+      if (a.original.slice(0, -1) == 'A')   { return 1;  } // High
+      if (b.original.slice(0, -1) == 'A')   { return -1; }
+      if (a.original.slice(0, -1) == 'D')   { return -1; } // Low
+      if (b.original.slice(0, -1) == 'D')   { return 1;  }
+      if (a.original.slice(0, -1) == 'Ab')  { return 1;  } // High
+      if (b.original.slice(0, -1) == 'Ab')  { return -1; }
+      if (a.original.slice(0, -1) == 'Eb')  { return -1; } // Low
+      if (b.original.slice(0, -1) == 'Eb')  { return 1;  }
+      if (a.original.slice(0, -1) == 'G')   { return 1;  } // High
+      if (b.original.slice(0, -1) == 'G')   { return -1; }
+      if (a.original.slice(0, -1) == 'E')   { return -1; } // Low
+      if (b.original.slice(0, -1) == 'E')   { return 1;  }
+      if (a.original.slice(0, -1) == 'Gb')  { return 1;  } // High
+      if (b.original.slice(0, -1) == 'Gb')  { return -1; }
+      if (a.original.slice(0, -1) == 'F')   { return -1; } // Low
+      if (b.original.slice(0, -1) == 'F')   { return 1;  }
+      return 0;
+    });
+    // Remove last note and related rest
+    if (arrayNoteArrays[0].pop().keys == undefined)        { arrayNoteArrays[0].pop(); arrayAccArrays[0].pop(); }
+    if (arrayNoteArrays[1].pop().keys == undefined)        { arrayNoteArrays[1].pop(); arrayAccArrays[1].pop(); }
+    // Remove last accidentals markings for them
+    arrayAccArrays[0].pop();   arrayAccArrays[1].pop();  
+    // Add back as a chord
+    for (var i=0; i<arrayNotesPlayed.length; i++) {
+      chordNotes.push(arrayNotesPlayed[i].converted);
+    }
+    if (isUpper(strNote)) {
+      var vfsChord = new VFS({ keys: chordNotes, duration: "q" });
+      var vfsRest  = new VFS({ clef: "bass", keys: ["f/3"], duration: "qr" });
+      arrayNoteArrays[0].push(vfsChord);    arrayNoteArrays[1].push(vfsRest);
+    } else {
+      var vfsChord = new VFS({ clef: "bass", keys: chordNotes, duration: "q" });
+      var vfsRest = new VFS({ keys: ["b/4"], duration: "qr" });
+      arrayNoteArrays[0].push(vfsRest);     arrayNoteArrays[1].push(vfsChord);
+    }
+    arrayAccArrays[0].push(true); arrayAccArrays[1].push(true);
   } else {
-    var vfsNote = new VFS({ clef: "bass", keys: [convertNote(strNote, false)], duration: "q" });
-    var vfsRest = new VFS({ keys: ["b/4"], duration: "qr" });
-    arrayNoteArrays[0].push(vfsRest);
-    arrayNoteArrays[1].push(vfsNote);
-    arrayAccArrays[0].push(true);
-    arrayAccArrays[1].push(true);
+    // First note (possibly of a chord)
+    bNoteDown =                             true;
+    var convertedNote =                     convertNote(strNote, isUpper(strNote));
+    var objNote =                           {original: strNote, converted: convertedNote};
+    arrayNotesPlayed.push(objNote);
+    for (var i=0; i<arrayNotesPlayed.length; i++) {
+      chordNotes.push(arrayNotesPlayed[i].converted);
+    }
+    if (isUpper(strNote)) {
+      var vfsNote = new VFS({ keys: chordNotes, duration: "q" });
+      var vfsRest = new VFS({ clef: "bass", keys: ["f/3"], duration: "qr" });
+      arrayNoteArrays[0].push(vfsNote);     arrayNoteArrays[1].push(vfsRest);
+    } else {
+      var vfsNote = new VFS({ clef: "bass", keys: chordNotes, duration: "q" });
+      var vfsRest = new VFS({ keys: ["b/4"], duration: "qr" });
+      arrayNoteArrays[0].push(vfsRest);     arrayNoteArrays[1].push(vfsNote);
+    }
+    arrayAccArrays[0].push(true); arrayAccArrays[1].push(true);
   }
   if (noteLength(arrayNoteArrays, 0) % 4 == 0) {
-    arrayNoteArrays[0].push(new Vex.Flow.BarNote());
-    arrayNoteArrays[1].push(new Vex.Flow.BarNote());
-    arrayAccArrays[0].push(true);
-    arrayAccArrays[1].push(true);
+    arrayNoteArrays[0].push(new Vex.Flow.BarNote());  arrayNoteArrays[1].push(new Vex.Flow.BarNote());
+    arrayAccArrays[0].push(true);                     arrayAccArrays[1].push(true);
   }
+}
+
+function removeNote(strNote) {
+  var convertedNote =                       convertNote(strNote, isUpper(strNote));
+  tempArray =                               arrayNotesPlayed.filter(function(note) { return note.converted != convertedNote; });
+  arrayNotesPlayed =                        tempArray;
+  if (arrayNotesPlayed.length == 0)
+    bNoteDown = false;
 }
 
 function noteLength(arr, index) {
@@ -142,8 +213,6 @@ function showNotes() {
     // stave's note array.
     // ----------------------------------------------------------------------------------------
     for (i=0; i < arrayNoteArrays[staveIterator].length; i++) {
-      if (staveIterator == 0 && arrayNoteArrays[staveIterator][i].keys)
-        console.log(arrayNoteArrays[staveIterator][i].keys[0]);
       if (arrayNoteArrays[staveIterator][i].keys) { // Returns false if this isn't a key/rest
         switch (arrayNoteArrays[staveIterator][i].duration) {
           case 'w':

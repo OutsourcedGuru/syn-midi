@@ -33,7 +33,7 @@ cchrome index.html
 ```
 
 ## Current limitations
-* At the moment, it will accept a single note at a time, rendering this as a quarter note
+* The underlying vexflow library has a problem displaying two sharps in the same chord which are close to each other, for what it's worth.
 
 ## vexflow-syn
 The underlying vexflow-syn code fully supports some great-looking tablature, as seen below.
@@ -44,7 +44,7 @@ The underlying vexflow-syn code fully supports some great-looking tablature, as 
 
 |Description|Version|Author|Last Update|
 |:---|:---|:---|:---|
-|syn-midi|v1.3|OutsourcedGuru|May 22, 2019|
+|syn-midi|v1.4|OutsourcedGuru|May 23, 2019|
 
 |Donate||Cryptocurrency|
 |:-----:|---|:--------:|

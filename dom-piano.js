@@ -141,6 +141,7 @@ class DomPiano {
     else{
       el.style.backgroundColor = 'rgb(228, 216, 209)'      // See also style.css .piano-key
     }
+    removeNote(noteName);
   }
 
   blinkNote = (noteName, velocity) => {
